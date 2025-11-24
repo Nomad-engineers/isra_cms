@@ -67,7 +67,10 @@ export const Users: CollectionConfig = {
 
           await req.payload.create({
             collection: 'users',
-            data,
+            data: {
+              ...data,
+              role: UserRole.client,
+            },
           })
           return Response.json({
             message: 'Created',
