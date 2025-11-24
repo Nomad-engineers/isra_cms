@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    rooms: Room;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    rooms: RoomsSelect<false> | RoomsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -160,6 +162,31 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rooms".
+ */
+export interface Room {
+  id: number;
+  logo?: (number | null) | Media;
+  name: string;
+  user: number | User;
+  type: 'live' | 'auto';
+  scheduledDate?: string | null;
+  roomStarted?: boolean | null;
+  videoUrl?: string | null;
+  bannerUrl?: string | null;
+  showBanner?: boolean | null;
+  btnUrl?: string | null;
+  showBtn?: boolean | null;
+  showChat?: boolean | null;
+  isVolumeOn?: boolean | null;
+  banUsers?: (number | User)[] | null;
+  startedAt?: string | null;
+  stoppedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -189,6 +216,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'rooms';
+        value: number | Room;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -271,6 +302,30 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rooms_select".
+ */
+export interface RoomsSelect<T extends boolean = true> {
+  logo?: T;
+  name?: T;
+  user?: T;
+  type?: T;
+  scheduledDate?: T;
+  roomStarted?: T;
+  videoUrl?: T;
+  bannerUrl?: T;
+  showBanner?: T;
+  btnUrl?: T;
+  showBtn?: T;
+  showChat?: T;
+  isVolumeOn?: T;
+  banUsers?: T;
+  startedAt?: T;
+  stoppedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
