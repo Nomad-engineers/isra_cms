@@ -1,4 +1,6 @@
-import type { CollectionConfig } from 'payload'
+import { User } from '@/payload-types'
+import type { CollectionConfig, PayloadRequest } from 'payload'
+import { password } from 'payload/shared'
 
 export enum UserRole {
   admin = 'admin',
@@ -11,7 +13,10 @@ export const Users: CollectionConfig = {
   admin: { useAsTitle: 'email' },
   auth: true,
   access: {
-    create: ({ data }) => data.role === UserRole.client,
+    read: (): boolean => true,
+    create: (): boolean => false,
+    delete: (): boolean => false,
+    update: (): boolean => false,
   },
   fields: [
     {
@@ -49,6 +54,28 @@ export const Users: CollectionConfig = {
         },
       ],
       defaultValue: UserRole.client,
+    },
+  ],
+
+  endpoints: [
+    {
+      path: '/register',
+      method: 'get',
+      handler: async (req: PayloadRequest) => {
+        try {
+          const data = await req.json!()
+
+          await req.payload.create({
+            collection: 'users',
+            data,
+          })
+          return Response.json({
+            message: 'Created',
+          })
+        } catch (error) {
+          return Response.json({ message: 'Internal server error', error })
+        }
+      },
     },
   ],
   timestamps: true,
