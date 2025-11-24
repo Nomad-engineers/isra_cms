@@ -10,6 +10,9 @@ export const Users: CollectionConfig = {
   slug: 'users',
   admin: { useAsTitle: 'email' },
   auth: true,
+  access: {
+    create: ({ data }) => data.role === UserRole.client,
+  },
   fields: [
     {
       name: 'email',
