@@ -1,6 +1,5 @@
-import { User } from '@/payload-types'
+import { AccessHelper } from '@/helper/access.helper'
 import type { CollectionConfig, PayloadRequest } from 'payload'
-import { password } from 'payload/shared'
 
 export enum UserRole {
   admin = 'admin',
@@ -14,9 +13,11 @@ export const Users: CollectionConfig = {
   auth: true,
   access: {
     read: (): boolean => true,
-    create: (): boolean => false,
-    delete: (): boolean => false,
-    update: (): boolean => false,
+    create: ({ req: { user } }) => AccessHelper.isAdmin(user),
+    delete: ({ req: { user } }) => AccessHelper.isAdmin(user),
+    update: ({ req: { user } }) => AccessHelper.isAdmin(user),
+
+    // admin: ({ req: { user } }) => false,
   },
   fields: [
     {
@@ -26,12 +27,12 @@ export const Users: CollectionConfig = {
       required: true,
     },
     {
-      name: 'last_name',
+      name: 'lastName',
       label: 'Фамилия',
       type: 'text',
     },
     {
-      name: 'first_name',
+      name: 'firstName',
       label: 'Имя',
       type: 'text',
     },
@@ -54,9 +55,28 @@ export const Users: CollectionConfig = {
         },
       ],
       defaultValue: UserRole.client,
+      access: {
+        update: ({ req: { user } }) => AccessHelper.isAdmin(user),
+      },
+    },
+    {
+      name: 'phone',
+      label: 'Телефон',
+      type: 'text',
+      validate: (value: any) => {
+        if (value && !/^\+?[1-9]\d{1,14}$/.test(value)) {
+          return 'Invalid phone number format'
+        }
+        return true
+      },
+    },
+    {
+      name: 'isPhoneVerified',
+      label: 'Подтвержден ли телефон',
+      type: 'checkbox',
+      defaultValue: false,
     },
   ],
-
   endpoints: [
     {
       path: '/register',

@@ -1,9 +1,16 @@
+import { AccessHelper } from '@/helper/access.helper'
 import type { CollectionConfig } from 'payload'
 
 export const Rooms: CollectionConfig = {
   slug: 'rooms',
   admin: {
     useAsTitle: 'name',
+  },
+  access: {
+    read: (): boolean => true,
+    create: (): boolean => true,
+    delete: (): boolean => true,
+    update: (): boolean => true,
   },
   fields: [
     {
@@ -19,6 +26,7 @@ export const Rooms: CollectionConfig = {
     },
     {
       name: 'user',
+      label: 'Ведущий',
       type: 'relationship',
       relationTo: 'users',
       required: true,
