@@ -60,7 +60,7 @@ export const Users: CollectionConfig = {
   endpoints: [
     {
       path: '/register',
-      method: 'get',
+      method: 'post',
       handler: async (req: PayloadRequest) => {
         try {
           const data = await req.json!()
