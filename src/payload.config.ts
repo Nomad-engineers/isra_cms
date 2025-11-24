@@ -1,5 +1,4 @@
 // storage-adapter-import-placeholder
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -16,12 +15,14 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  cors: '*',
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   collections: [Users, Media, Rooms],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -34,7 +35,5 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [
-    // storage-adapter-placeholder
-  ],
+  plugins: [],
 })
