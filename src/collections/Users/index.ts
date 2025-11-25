@@ -1,6 +1,7 @@
 import { AccessHelper } from '@/helper/access.helper'
 import type { CollectionConfig } from 'payload'
 import { registerEndpoint } from './register.endpoint'
+import { googleEndpoint } from './google.endpoint'
 
 export enum UserRole {
   admin = 'admin',
@@ -83,6 +84,11 @@ export const Users: CollectionConfig = {
       path: '/register',
       method: 'post',
       handler: registerEndpoint,
+    },
+    {
+      path: '/google',
+      method: 'post',
+      handler: googleEndpoint,
     },
   ],
   timestamps: true,
