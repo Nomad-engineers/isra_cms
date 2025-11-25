@@ -10,6 +10,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Rooms } from './collections/Rooms'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -36,4 +37,16 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  email: nodemailerAdapter({
+    defaultFromAddress: 'isra@isra.kz',
+    defaultFromName: 'ISRA Support',
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: 587,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    },
+  }),
 })
