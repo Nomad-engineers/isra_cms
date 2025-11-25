@@ -17,7 +17,7 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   cors: {
-    origins: ['http://localhost:3000'],
+    origins: ['*'],
     headers: ['Authorization', 'Content-Type'],
   },
   admin: {
