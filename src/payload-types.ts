@@ -173,6 +173,7 @@ export interface Room {
   id: number;
   logo?: (number | null) | Media;
   name: string;
+  speaker: string;
   user: number | User;
   type: 'live' | 'auto';
   scheduledDate?: string | null;
@@ -320,6 +321,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface RoomsSelect<T extends boolean = true> {
   logo?: T;
   name?: T;
+  speaker?: T;
   user?: T;
   type?: T;
   scheduledDate?: T;

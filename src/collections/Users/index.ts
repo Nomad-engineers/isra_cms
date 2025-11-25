@@ -17,7 +17,9 @@ export const Users: CollectionConfig = {
     read: () => true,
     create: ({ req: { user } }) => AccessHelper.isAdmin(user),
     delete: ({ req: { user } }) => AccessHelper.isAdmin(user),
-    update: ({ req: { user }, id }) => user?.id === id,
+    update: ({ req: { user }, id }) => {
+      return user?.id === id || AccessHelper.isAdmin(user)
+    },
 
     // admin: ({ req: { user } }) => false,
   },
