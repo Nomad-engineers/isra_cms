@@ -122,29 +122,26 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
+  email: string;
+  emailVerified?: string | null;
+  name?: string | null;
+  image?: string | null;
   lastName?: string | null;
   firstName?: string | null;
   role?: ('admin' | 'client' | 'moderator') | null;
   phone?: string | null;
   isPhoneVerified?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
+  accounts?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        provider: string;
+        providerAccountId: string;
+        type: 'oidc' | 'oauth' | 'email' | 'webauthn';
+        id?: string | null;
       }[]
     | null;
-  password?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -173,7 +170,7 @@ export interface Room {
   id: number;
   logo?: (number | null) | Media;
   name: string;
-  user: number | User;
+  user: string | User;
   type: 'live' | 'auto';
   scheduledDate?: string | null;
   roomStarted?: boolean | null;
@@ -184,7 +181,7 @@ export interface Room {
   showBtn?: boolean | null;
   showChat?: boolean | null;
   isVolumeOn?: boolean | null;
-  banUsers?: (number | User)[] | null;
+  banUsers?: (string | User)[] | null;
   startedAt?: string | null;
   stoppedAt?: string | null;
   updatedAt: string;
@@ -216,7 +213,7 @@ export interface PayloadLockedDocument {
   document?:
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'media';
@@ -229,7 +226,7 @@ export interface PayloadLockedDocument {
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -242,7 +239,7 @@ export interface PayloadPreference {
   id: number;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -273,27 +270,26 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  id?: T;
+  email?: T;
+  emailVerified?: T;
+  name?: T;
+  image?: T;
   lastName?: T;
   firstName?: T;
   role?: T;
   phone?: T;
   isPhoneVerified?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+  accounts?:
     | T
     | {
+        provider?: T;
+        providerAccountId?: T;
+        type?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

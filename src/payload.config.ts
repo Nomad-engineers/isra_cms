@@ -10,6 +10,8 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Rooms } from './collections/Rooms'
+import { authjsPlugin } from 'payload-authjs'
+import { authConfig } from './auth.config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,5 +37,9 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    authjsPlugin({
+      authjsConfig: authConfig,
+    }),
+  ],
 })
