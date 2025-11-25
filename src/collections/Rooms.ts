@@ -1,5 +1,5 @@
 import { AccessHelper } from '@/helper/access.helper'
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, PayloadRequest } from 'payload'
 
 export const Rooms: CollectionConfig = {
   slug: 'rooms',
@@ -25,8 +25,14 @@ export const Rooms: CollectionConfig = {
       required: true,
     },
     {
+      name: 'speaker',
+      label: 'Имя спикера',
+      type: 'text',
+      required: true,
+    },
+    {
       name: 'user',
-      label: 'Ведущий',
+      label: 'Пользователь',
       type: 'relationship',
       relationTo: 'users',
       required: true,
