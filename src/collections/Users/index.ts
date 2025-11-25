@@ -15,7 +15,9 @@ export enum UserRole {
 export const Users: CollectionConfig = {
   slug: 'users',
   admin: { useAsTitle: 'email' },
-  auth: true,
+  auth: {
+    useSessions: false,
+  },
   access: {
     read: () => true,
     create: ({ req: { user } }) => AccessHelper.isAdmin(user),
