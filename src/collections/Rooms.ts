@@ -165,6 +165,7 @@ export const Rooms: CollectionConfig = {
       method: 'get',
       handler: async (req) => {
         const user = req.user
+        console.log('user', user)
         if (!user) return Response.json({ message: 'Unauthorized' }, { status: 401 })
 
         const result = await req.payload.find({
