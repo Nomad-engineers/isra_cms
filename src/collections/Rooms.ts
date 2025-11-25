@@ -1,4 +1,5 @@
 import { AccessHelper } from '@/helper/access.helper'
+import { User } from '@/payload-types'
 import type { CollectionConfig, PayloadRequest } from 'payload'
 
 export const Rooms: CollectionConfig = {
@@ -7,10 +8,32 @@ export const Rooms: CollectionConfig = {
     useAsTitle: 'name',
   },
   access: {
-    read: (): boolean => true,
-    create: (): boolean => true,
-    delete: (): boolean => true,
-    update: (): boolean => true,
+    read: () => true,
+    create: ({ req: { user } }) => AccessHelper.isAdmin(user),
+    delete: async ({ req: { user, payload }, id }) => {
+      if (!user || !id) return false
+      try {
+        const room = await payload.findByID({
+          id: Number(id),
+          collection: 'rooms',
+        })
+        return (room.user as User).id == user.id || AccessHelper.isAdmin(user)
+      } catch (e) {
+        return false
+      }
+    },
+    update: async ({ req: { user, payload }, id }) => {
+      if (!user || !id) return false
+      try {
+        const room = await payload.findByID({
+          id: Number(id),
+          collection: 'rooms',
+        })
+        return (room.user as User).id == user.id || AccessHelper.isAdmin(user)
+      } catch (e) {
+        return false
+      }
+    },
   },
   fields: [
     {
@@ -129,6 +152,46 @@ export const Rooms: CollectionConfig = {
         },
       },
       required: false,
+    },
+  ],
+  endpoints: [
+    {
+      path: '/my',
+      method: 'get',
+      handler: async (req) => {
+        const user = req.user
+        if (!user) return Response.json({ message: 'Unauthorized' }, { status: 401 })
+
+        const result = await req.payload.find({
+          collection: 'rooms',
+          where: {
+            user: { equals: user.id },
+          },
+        })
+        return Response.json(result)
+      },
+    },
+    {
+      path: '/create',
+      method: 'post',
+      handler: async (req) => {
+        const user = req.user
+        if (!user) return Response.json({ message: 'Unauthorized' }, { status: 401 })
+
+        try {
+          const data = await req.json!()
+          const result = await req.payload.create({
+            collection: 'rooms',
+            data: {
+              ...data,
+              user: user.id,
+            },
+          })
+          return Response.json(result)
+        } catch (e) {
+          return Response.json({ message: 'Internal server error', e })
+        }
+      },
     },
   ],
 }
