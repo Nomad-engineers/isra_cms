@@ -11,6 +11,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Rooms } from './collections/Rooms'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { openapi, swaggerUI } from 'payload-oapi'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -39,7 +40,14 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    openapi({ openapiVersion: '3.0', metadata: { title: 'Dev API', version: '0.0.1' } }),
+    swaggerUI({
+      docsUrl: '/docs',
+      specEndpoint: '/openapi.json',
+      enabled: true,
+    }),
+  ],
   email: nodemailerAdapter({
     defaultFromAddress: 'isra@isra.kz',
     defaultFromName: 'ISRA Support',
