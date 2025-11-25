@@ -109,23 +109,27 @@ export const googleEndpoint = async (req: PayloadRequest) => {
       expiresIn: collectionConfig.auth.tokenExpiration,
     })
 
-    return Response.json(
-      {},
-      {
-        status: 200,
-        headers: {
-          'Set-Cookie': `${payload.config.cookiePrefix}-token=${token}; Path=/; HttpOnly; ${
-            collectionConfig.auth.tokenExpiration
-              ? `Expires=${new Date(
-                  Date.now() + collectionConfig.auth.tokenExpiration * 1000,
-                ).toUTCString()};`
-              : ''
-          } ${collectionConfig.auth.cookies.secure ? 'Secure;' : ''} SameSite=${
-            collectionConfig.auth.cookies.sameSite
-          }; ${collectionConfig.auth.cookies.domain ? `Domain=${collectionConfig.auth.cookies.domain};` : ''}`,
-        },
-      },
+    return Response.redirect(
+      process.env.GOOGLE_SUCCESS_REDIRECT! + `?token=${token}&email=${email}`,
     )
+
+    // return Response.json(
+    //   {},
+    //   {
+    //     status: 200,
+    //     headers: {
+    //       'Set-Cookie': `${payload.config.cookiePrefix}-token=${token}; Path=/; HttpOnly; ${
+    //         collectionConfig.auth.tokenExpiration
+    //           ? `Expires=${new Date(
+    //               Date.now() + collectionConfig.auth.tokenExpiration * 1000,
+    //             ).toUTCString()};`
+    //           : ''
+    //       } ${collectionConfig.auth.cookies.secure ? 'Secure;' : ''} SameSite=${
+    //         collectionConfig.auth.cookies.sameSite
+    //       }; ${collectionConfig.auth.cookies.domain ? `Domain=${collectionConfig.auth.cookies.domain};` : ''}`,
+    //     },
+    //   },
+    // )
   } catch (error) {
     return Response.json({ message: 'Internal server error', error })
   }

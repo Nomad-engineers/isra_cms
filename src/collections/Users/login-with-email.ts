@@ -51,13 +51,5 @@ export const loginWithEmail = async (email: string) => {
     expiresIn: collectionConfig.auth.tokenExpiration,
   })
 
-  // Set cookie
-  // return Response.(`${payload.config.cookiePrefix}-token`, token, {
-  //   path: '/',
-  //   httpOnly: true,
-  //   expires: collectionConfig.auth.tokenExpiration,
-  //   secure: collectionConfig.auth.cookies.secure,
-  //   sameSite: collectionConfig.auth.cookies.sameSite,
-  //   domain: collectionConfig.auth.cookies.domain || undefined,
-  // })
+  return token
 }
