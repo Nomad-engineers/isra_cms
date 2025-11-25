@@ -106,10 +106,8 @@ export const Users: CollectionConfig = {
             },
           )
           const dataGoogle = await response.json()
-          console.log('dataGoogle', dataGoogle)
           const email = dataGoogle.email
           if (!email) return Response.json({ error: 'Email not found in token' }, { status: 400 })
-
           const { payload } = req
 
           let user: User = (
@@ -118,18 +116,17 @@ export const Users: CollectionConfig = {
               where: { email: { equals: email } },
             })
           ).docs[0]
-
           if (!user) {
-            await payload.create({
+            user = await payload.create({
               collection: 'users',
               data: {
                 email,
                 firstName: dataGoogle.given_name,
                 lastName: dataGoogle.family_name,
+                password: Math.random().toString(36).slice(-8),
               },
             })
           }
-
           const collectionConfig = payload.collections['users'].config
 
           const fieldsToSign = collectionConfig.fields.reduce(
@@ -166,7 +163,7 @@ export const Users: CollectionConfig = {
 
           return Response.json({ token })
         } catch (e) {
-          return Response.json({ error: 'Invalid request' }, { status: 500 })
+          return Response.json({ error: 'Invalid request', e }, { status: 500 })
         }
       },
     },
