@@ -16,7 +16,10 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  cors: ['http://localhost:3000'],
+  cors: {
+    origins: ['http://localhost:3000'],
+    headers: ['Authorization', 'Content-Type'],
+  },
   admin: {
     user: Users.slug,
     importMap: {
