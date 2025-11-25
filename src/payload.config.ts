@@ -17,7 +17,7 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   cors: {
-    origins: ['http://localhost:3000'],
+    origins: ['http://localhost:3000', 'https://e0985583ef9c.ngrok-free.app'],
     headers: ['Authorization', 'Content-Type'],
   },
   admin: {

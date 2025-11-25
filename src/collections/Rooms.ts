@@ -153,6 +153,11 @@ export const Rooms: CollectionConfig = {
       },
       required: false,
     },
+    {
+      name: 'description',
+      type: 'text',
+      required: false,
+    },
   ],
   endpoints: [
     {

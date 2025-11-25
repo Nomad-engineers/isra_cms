@@ -188,6 +188,7 @@ export interface Room {
   banUsers?: (number | User)[] | null;
   startedAt?: string | null;
   stoppedAt?: string | null;
+  description?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -336,6 +337,7 @@ export interface RoomsSelect<T extends boolean = true> {
   banUsers?: T;
   startedAt?: T;
   stoppedAt?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
 }
