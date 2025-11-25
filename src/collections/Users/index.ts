@@ -1,5 +1,6 @@
 import { AccessHelper } from '@/helper/access.helper'
-import type { CollectionConfig, PayloadRequest } from 'payload'
+import type { CollectionConfig } from 'payload'
+import { registerEndpoint } from './register.endpoint'
 
 export enum UserRole {
   admin = 'admin',
@@ -12,10 +13,10 @@ export const Users: CollectionConfig = {
   admin: { useAsTitle: 'email' },
   auth: true,
   access: {
-    read: (): boolean => true,
+    read: () => true,
     create: ({ req: { user } }) => AccessHelper.isAdmin(user),
     delete: ({ req: { user } }) => AccessHelper.isAdmin(user),
-    update: ({ req: { user } }) => AccessHelper.isAdmin(user),
+    update: ({ req: { user }, id }) => user?.id === id,
 
     // admin: ({ req: { user } }) => false,
   },
@@ -81,24 +82,7 @@ export const Users: CollectionConfig = {
     {
       path: '/register',
       method: 'post',
-      handler: async (req: PayloadRequest) => {
-        try {
-          const data = await req.json!()
-
-          await req.payload.create({
-            collection: 'users',
-            data: {
-              ...data,
-              role: UserRole.client,
-            },
-          })
-          return Response.json({
-            message: 'Created',
-          })
-        } catch (error) {
-          return Response.json({ message: 'Internal server error', error })
-        }
-      },
+      handler: registerEndpoint,
     },
   ],
   timestamps: true,
