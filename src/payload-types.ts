@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     rooms: Room;
+    'user-avatar': UserAvatar;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     rooms: RoomsSelect<false> | RoomsSelect<true>;
+    'user-avatar': UserAvatarSelect<false> | UserAvatarSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -123,6 +125,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  avatar?: (number | null) | UserAvatar;
   lastName?: string | null;
   firstName?: string | null;
   role?: ('admin' | 'client' | 'moderator') | null;
@@ -138,6 +141,24 @@ export interface User {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-avatar".
+ */
+export interface UserAvatar {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -220,6 +241,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'rooms';
         value: number | Room;
+      } | null)
+    | ({
+        relationTo: 'user-avatar';
+        value: number | UserAvatar;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -268,6 +293,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  avatar?: T;
   lastName?: T;
   firstName?: T;
   role?: T;
@@ -326,6 +352,23 @@ export interface RoomsSelect<T extends boolean = true> {
   description?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-avatar_select".
+ */
+export interface UserAvatarSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

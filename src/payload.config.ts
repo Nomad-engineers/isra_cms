@@ -6,12 +6,10 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
-import { Rooms } from './collections/Rooms'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
-
+import { Media, Rooms, UserAvatar, Users } from './collections'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -27,7 +25,7 @@ export default buildConfig({
     },
   },
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
-  collections: [Users, Media, Rooms],
+  collections: [Users, Media, Rooms, UserAvatar],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -39,7 +37,16 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    vercelBlobStorage({
+      enabled: true, // Optional, defaults to true
+      collections: {
+        media: true,
+        'user-avatar': true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
   email: nodemailerAdapter({
     defaultFromAddress: 'isra@isra.kz',
     defaultFromName: 'ISRA Support',

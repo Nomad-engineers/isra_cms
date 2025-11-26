@@ -1,5 +1,5 @@
+import { UserRole } from '@/collections'
 import { PayloadRequest } from 'payload'
-import { UserRole } from '.'
 
 export const registerEndpoint = async (req: PayloadRequest) => {
   if (req.json == null) return Response.json({ error: 'Invalid request' }, { status: 400 })
