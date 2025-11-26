@@ -83,6 +83,42 @@ export const Users: CollectionConfig = {
       type: 'checkbox',
       defaultValue: false,
     },
+    {
+      name: 'plan',
+      type: 'relationship',
+      relationTo: 'plans',
+    },
+    {
+      name: 'planStatus',
+      type: 'select',
+      options: [
+        { label: 'Активен', value: 'active' },
+        { label: 'На испытательном сроке', value: 'trialing' },
+        { label: 'Приостановлен', value: 'paused' },
+        { label: 'Отменен', value: 'canceled' },
+        { label: 'Просрочен', value: 'past_due' },
+        { label: 'Просрочен платеж', value: 'overdue' },
+        { label: 'Истекший', value: 'expired' },
+        { label: 'Неактивен', value: 'inactive' },
+        { label: 'Активен до конца периода', value: 'active_until_period_end' },
+      ],
+    },
+    {
+      name: 'planBillingCycle',
+      type: 'select',
+      options: [
+        { label: 'Месячная', value: 'month' },
+        { label: 'Годовая', value: 'year' },
+      ],
+    },
+    {
+      name: 'planEndDate',
+      type: 'date',
+    },
+    {
+      name: 'planCanceledAt',
+      type: 'date',
+    },
   ],
   endpoints: [
     {

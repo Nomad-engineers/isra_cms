@@ -9,7 +9,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
-import { Media, Rooms, UserAvatar, Users } from './collections'
+import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -25,7 +25,7 @@ export default buildConfig({
     },
   },
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
-  collections: [Users, Media, Rooms, UserAvatar],
+  collections: [Users, Media, Rooms, UserAvatar, Plans],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

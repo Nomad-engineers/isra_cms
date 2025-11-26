@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     rooms: Room;
     'user-avatar': UserAvatar;
+    plans: Plan;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     'user-avatar': UserAvatarSelect<false> | UserAvatarSelect<true>;
+    plans: PlansSelect<false> | PlansSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -131,6 +133,23 @@ export interface User {
   role?: ('admin' | 'client' | 'moderator') | null;
   phone?: string | null;
   isPhoneVerified?: boolean | null;
+  plan?: (number | null) | Plan;
+  planStatus?:
+    | (
+        | 'active'
+        | 'trialing'
+        | 'paused'
+        | 'canceled'
+        | 'past_due'
+        | 'overdue'
+        | 'expired'
+        | 'inactive'
+        | 'active_until_period_end'
+      )
+    | null;
+  planBillingCycle?: ('month' | 'year') | null;
+  planEndDate?: string | null;
+  planCanceledAt?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -159,6 +178,28 @@ export interface UserAvatar {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "plans".
+ */
+export interface Plan {
+  id: number;
+  active?: boolean | null;
+  code: string;
+  name?: string | null;
+  description?: string | null;
+  monthlyPrice: number;
+  yearlyPrice?: number | null;
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -245,6 +286,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'user-avatar';
         value: number | UserAvatar;
+      } | null)
+    | ({
+        relationTo: 'plans';
+        value: number | Plan;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -299,6 +344,11 @@ export interface UsersSelect<T extends boolean = true> {
   role?: T;
   phone?: T;
   isPhoneVerified?: T;
+  plan?: T;
+  planStatus?: T;
+  planBillingCycle?: T;
+  planEndDate?: T;
+  planCanceledAt?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -369,6 +419,27 @@ export interface UserAvatarSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "plans_select".
+ */
+export interface PlansSelect<T extends boolean = true> {
+  active?: T;
+  code?: T;
+  name?: T;
+  description?: T;
+  monthlyPrice?: T;
+  yearlyPrice?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
