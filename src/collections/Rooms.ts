@@ -1,5 +1,5 @@
 import { AccessHelper } from '@/helper/access.helper'
-import { User } from '@/payload-types'
+import { Room, User } from '@/payload-types'
 import type { CollectionConfig, PayloadRequest } from 'payload'
 
 export const Rooms: CollectionConfig = {
@@ -12,24 +12,27 @@ export const Rooms: CollectionConfig = {
     create: ({ req: { user } }) => AccessHelper.isAdmin(user),
     delete: async ({ req: { user, payload }, id }) => {
       if (!user || !id) return false
+      if (AccessHelper.isAdmin(user)) return true
       try {
         const room = await payload.findByID({
           id: Number(id),
           collection: 'rooms',
         })
-        return (room.user as User).id == user.id || AccessHelper.isAdmin(user)
+        return (room.user as User).id == user.id
       } catch (e) {
         return false
       }
     },
-    update: async ({ req: { user, payload }, id }) => {
+    update: async ({ req, id }) => {
+      const { user, payload } = req
       if (!user || !id) return false
+      if (AccessHelper.isAdmin(user)) return true
       try {
         const room = await payload.findByID({
           id: Number(id),
           collection: 'rooms',
         })
-        return (room.user as User).id == user.id || AccessHelper.isAdmin(user)
+        return (room.user as User).id == user.id
       } catch (e) {
         return false
       }
@@ -85,6 +88,23 @@ export const Rooms: CollectionConfig = {
         },
       },
       required: false,
+
+      hooks: {
+        afterChange: [
+          async ({ req, originalDoc, value, previousValue }) => {
+            if (value == previousValue) return
+            const room = originalDoc as Room
+            if (!room.scheduledDate) return
+
+            await req.payload.jobs.queue({
+              task: 'runRoom',
+              input: { roomId: room.id },
+              overrideAccess: true,
+              waitUntil: new Date(room.scheduledDate),
+            })
+          },
+        ],
+      },
     },
     {
       name: 'roomStarted',

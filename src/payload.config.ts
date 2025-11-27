@@ -10,6 +10,7 @@ import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
+import { Room } from './payload-types'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -59,4 +60,48 @@ export default buildConfig({
       },
     },
   }),
+  jobs: {
+    jobsCollectionOverrides: ({ defaultJobsCollection }) => {
+      if (!defaultJobsCollection.admin) {
+        defaultJobsCollection.admin = {}
+      }
+
+      defaultJobsCollection.admin.hidden = false
+      return defaultJobsCollection
+    },
+    autoRun: [
+      {
+        cron: '* * * * *',
+        queue: 'default',
+        limit: 100,
+      },
+    ],
+    tasks: [
+      {
+        schedule: [],
+        slug: 'runRoom',
+        inputSchema: [
+          {
+            name: 'roomId',
+            type: 'number',
+            required: true,
+          },
+        ],
+        retries: 1,
+        handler: async ({ input, job, req }) => {
+          const result = await req.payload.update({
+            collection: 'rooms',
+            id: input.roomId,
+            data: {
+              roomStarted: true,
+              startedAt: new Date().toUTCString(),
+            },
+          })
+          return {
+            output: result,
+          }
+        },
+      },
+    ],
+  },
 })
