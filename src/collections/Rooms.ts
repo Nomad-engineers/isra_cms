@@ -1,6 +1,7 @@
 import { AccessHelper } from '@/helper/access.helper'
 import { Room, User } from '@/payload-types'
 import type { CollectionConfig, PayloadRequest } from 'payload'
+import { v4 as uuidv4 } from 'uuid'
 
 export const Rooms: CollectionConfig = {
   slug: 'rooms',
@@ -38,7 +39,22 @@ export const Rooms: CollectionConfig = {
       }
     },
   },
+  hooks: {
+    beforeValidate: [
+      ({ data }) => {
+        if (!data?.id) {
+          const customID = uuidv4()
+          return { ...data, id: customID }
+        }
+        return data
+      },
+    ],
+  },
   fields: [
+    {
+      name: 'id',
+      type: 'text',
+    },
     {
       name: 'logo',
       type: 'relationship',
@@ -96,12 +112,12 @@ export const Rooms: CollectionConfig = {
             const room = originalDoc as Room
             if (!room.scheduledDate) return
 
-            await req.payload.jobs.queue({
-              task: 'runRoom',
-              input: { roomId: room.id },
-              overrideAccess: true,
-              waitUntil: new Date(room.scheduledDate),
-            })
+            // await req.payload.jobs.queue({
+            //   task: 'runRoom',
+            //   input: { roomId: room.id },
+            //   overrideAccess: true,
+            //   waitUntil: new Date(room.scheduledDate),
+            // })
           },
         ],
       },

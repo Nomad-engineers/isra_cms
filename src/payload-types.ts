@@ -237,7 +237,7 @@ export interface Media {
  * via the `definition` "rooms".
  */
 export interface Room {
-  id: number;
+  id: string;
   logo?: (number | null) | Media;
   name: string;
   speaker: string;
@@ -394,7 +394,7 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'rooms';
-        value: number | Room;
+        value: string | Room;
       } | null)
     | ({
         relationTo: 'user-avatar';
@@ -495,6 +495,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "rooms_select".
  */
 export interface RoomsSelect<T extends boolean = true> {
+  id?: T;
   logo?: T;
   name?: T;
   speaker?: T;

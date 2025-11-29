@@ -10,7 +10,7 @@ import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
-import { Room } from './payload-types'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -98,7 +98,7 @@ export default buildConfig({
             },
           })
           return {
-            output: result,
+            output: true,
           }
         },
       },
