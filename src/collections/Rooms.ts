@@ -16,8 +16,8 @@ export const Rooms: CollectionConfig = {
       if (AccessHelper.isAdmin(user)) return true
       try {
         const room = await payload.findByID({
-          id,
           collection: 'rooms',
+          id,
         })
         return (room.user as User).id == user.id
       } catch (e) {
@@ -30,8 +30,8 @@ export const Rooms: CollectionConfig = {
       if (AccessHelper.isAdmin(user)) return true
       try {
         const room = await payload.findByID({
-          id: Number(id),
           collection: 'rooms',
+          id,
         })
         return (room.user as User).id == user.id
       } catch (e) {
