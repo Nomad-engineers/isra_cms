@@ -112,12 +112,12 @@ export const Rooms: CollectionConfig = {
             const room = originalDoc as Room
             if (!room.scheduledDate) return
 
-            // await req.payload.jobs.queue({
-            //   task: 'runRoom',
-            //   input: { roomId: room.id },
-            //   overrideAccess: true,
-            //   waitUntil: new Date(room.scheduledDate),
-            // })
+            await req.payload.jobs.queue({
+              task: 'runRoom',
+              input: { roomId: room.id },
+              overrideAccess: true,
+              waitUntil: new Date(room.scheduledDate),
+            })
           },
         ],
       },

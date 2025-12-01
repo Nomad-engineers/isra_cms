@@ -78,18 +78,17 @@ export default buildConfig({
     ],
     tasks: [
       {
-        schedule: [],
         slug: 'runRoom',
         inputSchema: [
           {
             name: 'roomId',
-            type: 'number',
+            type: 'text',
             required: true,
           },
         ],
         retries: 1,
         handler: async ({ input, job, req }) => {
-          const result = await req.payload.update({
+          await req.payload.update({
             collection: 'rooms',
             id: input.roomId,
             data: {
