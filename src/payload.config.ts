@@ -117,6 +117,7 @@ export default buildConfig({
               limit: 100,
               page,
             })
+            console.log('scenario', scenario)
 
             for (let i = 0; i < scenario.docs.length; i++) {
               const { username, message, seconds } = scenario.docs[i]
