@@ -104,7 +104,6 @@ export const Rooms: CollectionConfig = {
         },
       },
       required: false,
-
       hooks: {
         afterChange: [
           async ({ req, originalDoc, value, previousValue }) => {
@@ -161,13 +160,6 @@ export const Rooms: CollectionConfig = {
       name: 'isVolumeOn',
       type: 'checkbox',
       defaultValue: true,
-    },
-    {
-      name: 'banUsers',
-      type: 'relationship',
-      relationTo: 'users',
-      hasMany: true,
-      required: false,
     },
     {
       name: 'startedAt',

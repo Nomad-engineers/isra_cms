@@ -10,6 +10,8 @@ import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
+import { Scenario } from './collections/Scenario'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,8 +27,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
-  collections: [Users, Media, Rooms, UserAvatar, Plans],
+  collections: [Users, Media, Rooms, UserAvatar, Plans, Scenario],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -36,6 +37,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI,
     },
+    push: false,
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: [
@@ -88,14 +91,66 @@ export default buildConfig({
         ],
         retries: 1,
         handler: async ({ input, job, req }) => {
-          await req.payload.update({
+          const startedAt = new Date().toUTCString()
+          const room = await req.payload.update({
             collection: 'rooms',
             id: input.roomId,
             data: {
               roomStarted: true,
-              startedAt: new Date().toUTCString(),
+              startedAt,
             },
           })
+
+          // const startTime = new Date(startedAt).getTime()
+          let hasNextPage = true
+          let page = 1
+
+          while (hasNextPage) {
+            const scenario = await req.payload.find({
+              collection: 'scenario',
+              where: {
+                room: {
+                  equals: room.id,
+                },
+              },
+              limit: 100,
+              page,
+            })
+
+            for (let i = 0; i < scenario.docs.length; i++) {
+              const { username, message, seconds } = scenario.docs[i]
+              // const currentTime = Date.now()
+              // const targetTime = startTime + (seconds || 0) * 1000
+              // const delay = targetTime - currentTime
+              const delay = +(seconds ?? 0)
+              if (delay > 0) {
+                // Отложенный вывод
+                setTimeout(() => {
+                  console.log(`Scenario[${i}]:`, {
+                    username,
+                    message,
+                    seconds,
+                    roomId: room.id,
+                    executedAt: new Date().toISOString(),
+                  })
+                }, delay)
+              } else if (delay === 0) {
+                // Немедленный вывод для секунд = 0
+                console.log(`Scenario[${i}] (immediate):`, {
+                  username,
+                  message,
+                  seconds,
+                  roomId: room.id,
+                  executedAt: new Date().toISOString(),
+                })
+              }
+              // Пропускаем сообщения из прошлого (кроме секунд = 0)
+            }
+
+            hasNextPage = scenario.hasNextPage
+            page++
+          }
+
           return {
             output: true,
           }

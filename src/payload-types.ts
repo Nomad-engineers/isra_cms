@@ -72,6 +72,7 @@ export interface Config {
     rooms: Room;
     'user-avatar': UserAvatar;
     plans: Plan;
+    scenario: Scenario;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -85,6 +86,7 @@ export interface Config {
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     'user-avatar': UserAvatarSelect<false> | UserAvatarSelect<true>;
     plans: PlansSelect<false> | PlansSelect<true>;
+    scenario: ScenarioSelect<false> | ScenarioSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -248,10 +250,22 @@ export interface Room {
   showBtn?: boolean | null;
   showChat?: boolean | null;
   isVolumeOn?: boolean | null;
-  banUsers?: (number | User)[] | null;
   startedAt?: string | null;
   stoppedAt?: string | null;
   description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scenario".
+ */
+export interface Scenario {
+  id: string;
+  username?: string | null;
+  message?: string | null;
+  seconds?: number | null;
+  room?: (string | null) | Room;
   updatedAt: string;
   createdAt: string;
 }
@@ -390,6 +404,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'plans';
         value: number | Plan;
+      } | null)
+    | ({
+        relationTo: 'scenario';
+        value: string | Scenario;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -497,7 +515,6 @@ export interface RoomsSelect<T extends boolean = true> {
   showBtn?: T;
   showChat?: T;
   isVolumeOn?: T;
-  banUsers?: T;
   startedAt?: T;
   stoppedAt?: T;
   description?: T;
@@ -539,6 +556,19 @@ export interface PlansSelect<T extends boolean = true> {
         id?: T;
       };
   sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scenario_select".
+ */
+export interface ScenarioSelect<T extends boolean = true> {
+  id?: T;
+  username?: T;
+  message?: T;
+  seconds?: T;
+  room?: T;
   updatedAt?: T;
   createdAt?: T;
 }
