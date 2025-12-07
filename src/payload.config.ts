@@ -12,6 +12,7 @@ import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
 import { Scenario } from './collections/Scenario'
 import { migrations } from './migrations'
+import { C } from 'vitest/dist/chunks/reporters.d.DL9pg5DB.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -74,7 +75,7 @@ export default buildConfig({
     },
     autoRun: [
       {
-        cron: '* * * * *',
+        cron: '* * * * * *',
         queue: 'default',
         limit: 100,
       },
@@ -101,7 +102,6 @@ export default buildConfig({
             },
           })
 
-          // const startTime = new Date(startedAt).getTime()
           let hasNextPage = true
           let page = 1
 
@@ -117,13 +117,9 @@ export default buildConfig({
               limit: 100,
               page,
             })
-            console.log('scenario', scenario)
 
             for (let i = 0; i < scenario.docs.length; i++) {
               const { username, message, seconds } = scenario.docs[i]
-              // const currentTime = Date.now()
-              // const targetTime = startTime + (seconds || 0) * 1000
-              // const delay = targetTime - currentTime
               const delay = +(seconds ?? 0)
               if (delay > 0) {
                 setTimeout(async () => {
@@ -131,6 +127,7 @@ export default buildConfig({
                     `https://socket.nomad-engineers.space/chat/${room.id}/messages/scenario`,
                     {
                       method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
                         email: '',
                         username,
@@ -144,6 +141,7 @@ export default buildConfig({
                   `https://socket.nomad-engineers.space/chat/${room.id}/messages/scenario`,
                   {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       email: '',
                       username,

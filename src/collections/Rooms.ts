@@ -227,5 +227,30 @@ export const Rooms: CollectionConfig = {
         }
       },
     },
+    {
+      path: '/start/:id',
+      method: 'post',
+      handler: async (req) => {
+        const user = req.user
+        if (!user) return Response.json({ message: 'Unauthorized' }, { status: 401 })
+
+        try {
+          const id = (await req.routeParams!.id!) as string
+          const room = await req.payload.findByID({
+            collection: 'rooms',
+            id,
+          })
+          await req.payload.jobs.queue({
+            task: 'runRoom',
+            input: { roomId: room.id },
+            overrideAccess: true,
+          })
+
+          return Response.json({ success: true })
+        } catch (e) {
+          return Response.json({ message: 'Internal server error', e })
+        }
+      },
+    },
   ],
 }
