@@ -105,6 +105,7 @@ export default buildConfig({
           let hasNextPage = true
           let page = 1
 
+          await fetch(`https://socket.nomad-engineers.space/webinars/${room.id}/token?email=`)
           while (hasNextPage) {
             const scenario = await req.payload.find({
               collection: 'scenario',
@@ -124,27 +125,32 @@ export default buildConfig({
               // const delay = targetTime - currentTime
               const delay = +(seconds ?? 0)
               if (delay > 0) {
-                // Отложенный вывод
-                setTimeout(() => {
-                  console.log(`Scenario[${i}]:`, {
-                    username,
-                    message,
-                    seconds,
-                    roomId: room.id,
-                    executedAt: new Date().toISOString(),
-                  })
+                setTimeout(async () => {
+                  await fetch(
+                    `https://socket.nomad-engineers.space/chat/${room.id}/messages/scenario`,
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        email: '',
+                        username,
+                        message,
+                      }),
+                    },
+                  )
                 }, delay)
               } else if (delay === 0) {
-                // Немедленный вывод для секунд = 0
-                console.log(`Scenario[${i}] (immediate):`, {
-                  username,
-                  message,
-                  seconds,
-                  roomId: room.id,
-                  executedAt: new Date().toISOString(),
-                })
+                await fetch(
+                  `https://socket.nomad-engineers.space/chat/${room.id}/messages/scenario`,
+                  {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      email: '',
+                      username,
+                      message,
+                    }),
+                  },
+                )
               }
-              // Пропускаем сообщения из прошлого (кроме секунд = 0)
             }
 
             hasNextPage = scenario.hasNextPage
