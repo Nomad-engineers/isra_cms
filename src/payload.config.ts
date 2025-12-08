@@ -106,6 +106,7 @@ export default buildConfig({
           let page = 1
 
           await fetch(`https://socket.nomad-engineers.space/webinars/${room.id}/token?email=`)
+          const startTime = new Date(startedAt).getTime()
           while (hasNextPage) {
             const scenario = await req.payload.find({
               collection: 'scenario',
@@ -121,7 +122,11 @@ export default buildConfig({
             for (let i = 0; i < scenario.docs.length; i++) {
               const { username, message, seconds } = scenario.docs[i]
               const delay = +(seconds ?? 0)
-              if (delay > 0) {
+
+              const currentTime = Date.now()
+              const targetTime = startTime + delay * 1000
+              const delaySeconds = targetTime - currentTime
+              if (delaySeconds > 0) {
                 setTimeout(async () => {
                   await fetch(
                     `https://socket.nomad-engineers.space/chat/${room.id}/messages/scenario`,
@@ -135,8 +140,8 @@ export default buildConfig({
                       }),
                     },
                   )
-                }, delay)
-              } else if (delay === 0) {
+                }, delaySeconds)
+              } else {
                 await fetch(
                   `https://socket.nomad-engineers.space/chat/${room.id}/messages/scenario`,
                   {
