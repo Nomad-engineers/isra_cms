@@ -4,9 +4,8 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { s3Storage } from '@payloadcms/storage-s3'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
@@ -43,13 +42,21 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    vercelBlobStorage({
-      enabled: true, // Optional, defaults to true
+    s3Storage({
       collections: {
         media: true,
         'user-avatar': true,
       },
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      bucket: process.env.MINIO_BUCKET || '',
+      config: {
+        endpoint: process.env.MINIO_ENDPOINT,
+        region: 'eu-central-1',
+        forcePathStyle: true,
+        credentials: {
+          accessKeyId: process.env.MINIO_ACCESS_KEY || '',
+          secretAccessKey: process.env.MINIO_SECRET_KEY || '',
+        },
+      },
     }),
   ],
   email: nodemailerAdapter({
