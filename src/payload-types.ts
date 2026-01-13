@@ -251,6 +251,7 @@ export interface Room {
   showBtn?: boolean | null;
   showChat?: boolean | null;
   isVolumeOn?: boolean | null;
+  welcomeMessage?: string | null;
   startedAt?: string | null;
   stoppedAt?: string | null;
   description?: string | null;
@@ -516,6 +517,7 @@ export interface RoomsSelect<T extends boolean = true> {
   showBtn?: T;
   showChat?: T;
   isVolumeOn?: T;
+  welcomeMessage?: T;
   startedAt?: T;
   stoppedAt?: T;
   description?: T;
