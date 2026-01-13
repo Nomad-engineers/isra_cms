@@ -161,9 +161,10 @@ export const Rooms: CollectionConfig = {
       type: 'checkbox',
       defaultValue: true,
     },
-    {
+   {
   name: 'welcomeMessage',
   type: 'textarea',
+  label: 'Welcome Message',
   required: false,
 },
     {
