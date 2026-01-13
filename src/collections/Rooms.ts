@@ -162,6 +162,16 @@ export const Rooms: CollectionConfig = {
       defaultValue: true,
     },
     {
+  name: 'welcomeMessage',
+  type: 'textarea',
+  admin: {
+        description: 'Это сообщение будет автоматически показано участникам при подключении к чату',
+       
+      },
+  
+  required: false,
+},
+    {
       name: 'startedAt',
       type: 'date',
       admin: {
