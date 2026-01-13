@@ -5,8 +5,9 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { s3Storage } from '@payloadcms/storage-s3'
+
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Media, Plans, Rooms, UserAvatar, Users } from './collections'
 import { Scenario } from './collections/Scenario'
