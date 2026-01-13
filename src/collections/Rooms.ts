@@ -164,11 +164,6 @@ export const Rooms: CollectionConfig = {
     {
   name: 'welcomeMessage',
   type: 'textarea',
-  admin: {
-        description: 'Это сообщение будет автоматически показано участникам при подключении к чату',
-       
-      },
-  
   required: false,
 },
     {
