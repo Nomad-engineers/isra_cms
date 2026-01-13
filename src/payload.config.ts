@@ -1,5 +1,4 @@
 // storage-adapter-import-placeholder
-import { s3Storage } from '@payloadcms/storage-s3'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
