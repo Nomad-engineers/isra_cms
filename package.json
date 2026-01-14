@@ -17,10 +17,11 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" pnpm exec playwright test",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "mig": "pnpm payload migrate",
-    "m:create": "pnpm payload migrate:create",
+    "m:run": "pnpm payload migrate",
+    "m:gen": "pnpm payload migrate:create",
     "m:status": "pnpm payload migrate:status",
-    "m:fresh": "pnpm payload migrate:fresh"
+    "m:fresh": "pnpm payload migrate:fresh",
+    "m:revert": "pnpm payload migrate:down"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.68.2",
