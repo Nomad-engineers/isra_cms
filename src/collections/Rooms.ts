@@ -162,6 +162,11 @@ export const Rooms: CollectionConfig = {
       defaultValue: true,
     },
     {
+      name: 'welcomeMessage',
+      type: 'textarea',
+      required: false,
+    },
+    {
       name: 'startedAt',
       type: 'date',
       admin: {
